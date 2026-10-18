@@ -634,16 +634,16 @@ function renderInventory() {
       .filter(r => r.type === 'in' && r.productId === p.id && r.supplier)
       .map(r => r.supplier)[0] || '-';
     return `<tr>
-      <td><b>${p.name}</b></td>
-      <td>${p.qty}</td>
-      <td>${fm(p.avgCost)}</td>
-      <td>${fm(p.qty * p.avgCost)}</td>
-      <td>${p.totalIn}</td>
-      <td>${p.totalOut}</td>
-      <td>${lastSupplier}</td>
-      <td><button class="link-btn" data-del="${p.id}">删除</button></td>
+      <td data-label="商品"><b>${p.name}</b></td>
+      <td data-label="库存">${p.qty}</td>
+      <td data-label="成本价">${fm(p.avgCost)}</td>
+      <td data-label="当前价值">${fm(p.qty * p.avgCost)}</td>
+      <td data-label="累计入库">${p.totalIn}</td>
+      <td data-label="累计出库">${p.totalOut}</td>
+      <td data-label="最近供应商">${lastSupplier}</td>
+      <td data-label="操作"><button class="link-btn" data-del="${p.id}">删除</button></td>
     </tr>`;
-  }).join('') : '<tr><td colspan="8" style="text-align:center;color:#999;padding:24px">暂无库存</td></tr>';
+  }).join('') : '<tr><td data-label="提示" colspan="8" style="text-align:center;color:#999;padding:24px">暂无库存</td></tr>';
   tbody.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = () => {
       if (!confirm('确定删除？历史记录保留。')) return;
@@ -671,17 +671,17 @@ function renderRecords() {
       ? `返利 ${fm(r.rebate || 0)} / 赠金 ${fm(r.giftAmount || 0)}`
       : `利润 ${fm(r.profit || 0)}`;
     return `<tr>
-      <td>${r.date || fmtDate(r.time)}</td>
-      <td>${ft(r.time).slice(11)}</td>
-      <td><span class="tag ${r.type === 'in' ? 'tag-in' : 'tag-out'}">${r.type === 'in' ? '入库' : '出库'}</span></td>
-      <td>${r.name}</td>
-      <td>${r.qty}${r.unit ? ' ' + r.unit : ''}</td>
-      <td>${fm(r.price)}</td>
-      <td><b>${fm(r.amount)}</b></td>
-      <td>${extras}</td>
-      <td>${r.remark || r.supplier || r.customer || '-'}</td>
+      <td data-label="日期">${r.date || fmtDate(r.time)}</td>
+      <td data-label="时间">${ft(r.time).slice(11)}</td>
+      <td data-label="类型"><span class="tag ${r.type === 'in' ? 'tag-in' : 'tag-out'}">${r.type === 'in' ? '入库' : '出库'}</span></td>
+      <td data-label="商品">${r.name}</td>
+      <td data-label="数量">${r.qty}${r.unit ? ' ' + r.unit : ''}</td>
+      <td data-label="单价">${fm(r.price)}</td>
+      <td data-label="金额"><b>${fm(r.amount)}</b></td>
+      <td data-label="备注">${extras}</td>
+      <td data-label="附加">${r.remark || r.supplier || r.customer || '-'}</td>
     </tr>`;
-  }).join('') : '<tr><td colspan="9" style="text-align:center;color:#999;padding:24px">暂无记录</td></tr>';
+  }).join('') : '<tr><td data-label="提示" colspan="9" style="text-align:center;color:#999;padding:24px">暂无记录</td></tr>';
 }
 
 /* ========== 搜索/过滤 ========== */
