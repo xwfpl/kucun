@@ -538,52 +538,59 @@ body {
   }
   .form-topbar .btn { padding: 6px 12px; font-size: 12px; flex-shrink: 0; }
 
-  /* Batch rows - 垂直堆叠 */
+  /* Batch rows - 紧凑双列 */
   .batch-head { display: none !important; }
   .batch-head-in + .batch-body > .batch-row,
   .batch-head-out + .batch-body > .batch-row {
     display: block;
-    padding: 12px 12px;
-    margin: 10px 0;
-    border-radius: 10px;
+    padding: 8px 10px;
+    margin: 6px 0;
+    border-radius: 8px;
     border: 1px solid rgba(99, 102, 241, 0.1);
     background: rgba(10, 15, 26, 0.5);
-    gap: 0;
   }
   .batch-row {
-    display: block !important;
-    padding: 12px;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 8px;
+    padding: 0;
+    position: relative;
+  }
+  /* 商品名独占整行 */
+  .batch-row .c-wrap { grid-column: 1 / -1; }
+  /* 删除按钮浮在右上角 */
+  .batch-row .c-del {
+    position: absolute; top: 2px; right: 2px;
+    width: 22px; height: 22px; font-size: 13px;
   }
   .batch-row .c-wrap, .batch-row .f,
   .batch-row .c-sub, .batch-row .c-profit, .batch-row .c-stock {
-    display: block;
-    width: 100%; margin-bottom: 8px;
-    min-width: 0;
+    display: block; width: 100%; min-width: 0; margin: 0;
   }
   .batch-row input, .batch-row select {
     display: block; width: 100%;
-    padding: 9px 10px; font-size: 14px;
+    padding: 5px 7px; font-size: 13px;
   }
-  /* 手机端字段标签：从 data-label 取 */
+  /* 手机端字段标签：小一号，贴紧 */
   .batch-row .c-wrap::before, .batch-row .f::before,
   .batch-row .c-stock::before, .batch-row .c-sub::before,
   .batch-row .c-profit::before {
     content: attr(data-label);
     display: block;
-    font-size: 10px; font-weight: 600;
-    color: #475569; letter-spacing: 0.6px; text-transform: uppercase;
-    margin-bottom: 3px;
+    font-size: 9px; font-weight: 600;
+    color: #475569; letter-spacing: 0.4px; text-transform: uppercase;
+    margin-bottom: 1px;
+    line-height: 1;
   }
   .batch-row .c-stock, .batch-row .c-sub, .batch-row .c-profit {
-    font-size: 13px; color: #94a3b8;
-    padding: 2px;
+    font-size: 12px; color: #94a3b8;
+    padding: 3px 6px; border-radius: 4px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(99, 102, 241, 0.08);
   }
   .batch-row .c-profit { color: #22d3ee; font-weight: 600; }
-  .batch-row .c-del {
-    position: absolute; top: 8px; right: 8px;
-    width: 28px; height: 28px;
-  }
-  .batch-row { position: relative; }
+  /* 入库：返利、赠金改占半列；出库：库存半列、小计+利润半列 */
+  .batch-head-out + .batch-body > .batch-row { grid-template-columns: 1fr 1fr; }
 
   /* Summary */
   .batch-summary { padding: 10px 12px; font-size: 11.5px; }
