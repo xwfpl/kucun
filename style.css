@@ -469,47 +469,181 @@ body {
   .card-value { font-size: 26px; }
 }
 
+/* ===== 手机端（≤768px） ===== */
 @media (max-width: 768px) {
-  .content { padding: 24px 16px; }
-  .page-title h2 { font-size: 20px; margin-bottom: 8px; }
-  .page-title { margin-bottom: 24px; }
-
-  .topbar {
-    padding: 0 16px; height: auto;
-    padding-top: 12px; padding-bottom: 12px;
-    gap: 12px; flex-wrap: wrap;
+  html, body { overflow-x: hidden; }
+  body {
+    overscroll-behavior-y: contain;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
-  .brand { order: 1; }
+  .content { padding: 18px 14px 40px; }
+  .page-title { margin-bottom: 18px; }
+  .page-title h2 { font-size: 19px; }
+  .page-title p { font-size: 12px; margin-top: 4px; }
+
+  /* Topbar */
+  .topbar {
+    padding: 10px 14px; height: auto;
+    flex-wrap: wrap; gap: 10px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .brand { order: 1; gap: 8px; }
+  .brand-logo { width: 26px; height: 26px; font-size: 12px; border-radius: 5px; }
+  .brand-name { font-size: 13px; }
+  .brand-sub { display: none; }
   .nav {
-    order: 3; width: 100%;
-    overflow-x: auto; gap: 2px;
+    order: 2; width: 100%; gap: 2px;
+    overflow-x: auto;
     padding-bottom: 2px;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .nav::-webkit-scrollbar { display: none; }
   .nav-item { flex-shrink: 0; padding: 7px 12px; font-size: 12.5px; }
   .topbar-right { display: none; }
 
-  .cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .card { padding: 16px; }
-  .card-value { font-size: 22px; }
-  .card-label { font-size: 11px; }
+  /* Cards */
+  .dash-group { margin-bottom: 26px; }
+  .dash-group-title-bar { margin-bottom: 12px; }
+  .dash-group-title { font-size: 11px; }
+  .cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .card { padding: 14px; border-radius: 8px; }
+  .card-top { margin-bottom: 10px; }
+  .card-value { font-size: 22px; letter-spacing: -0.5px; }
+  .card-label { font-size: 10px; }
+  .card-ico { display: none; }
 
-  .form-topbar { padding: 12px 14px; gap: 10px; }
+  /* Month switcher */
+  .month-switch { transform: scale(0.88); transform-origin: right center; }
+
+  /* Dashboard empty */
+  .dash-empty { padding: 28px 16px; font-size: 12px; }
+
+  /* Form topbar - 折行 */
+  .form-topbar {
+    padding: 12px; gap: 10px;
+    flex-wrap: wrap;
+  }
   .field-compact { flex: 1 1 calc(50% - 5px); min-width: 0; }
-  .field-compact input { width: 100%; min-width: 0; }
+  .field-compact label { font-size: 10px; }
+  .field-compact input {
+    width: 100%; padding: 7px 9px; font-size: 13px;
+    min-width: 0;
+  }
+  .form-topbar .btn { padding: 6px 12px; font-size: 12px; flex-shrink: 0; }
 
-  .batch-head, .batch-row { min-width: 640px; }
+  /* Batch rows - 垂直堆叠 */
+  .batch-head { display: none !important; }
+  .batch-head-in + .batch-body > .batch-row,
+  .batch-head-out + .batch-body > .batch-row {
+    display: block;
+    padding: 12px 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    background: rgba(10, 15, 26, 0.5);
+    gap: 0;
+  }
+  .batch-row {
+    display: block !important;
+    padding: 10px;
+  }
+  .c-wrap, .batch-row input, .batch-row select,
+  .batch-row .c-sub, .batch-row .c-profit, .batch-row .c-stock {
+    display: block;
+    width: 100%; margin-bottom: 8px;
+    min-width: 0;
+  }
+  .c-wrap input, .batch-row input, .batch-row select {
+    padding: 9px 10px; font-size: 14px;
+  }
+  .batch-row .c-stock, .batch-row .c-sub, .batch-row .c-profit {
+    font-size: 12.5px; color: #64748b;
+    padding: 4px 2px;
+  }
+  .batch-row .c-del {
+    position: absolute; top: 8px; right: 8px;
+    width: 28px; height: 28px;
+  }
+  .batch-row { position: relative; }
 
-  .form-footer { padding: 14px; gap: 10px; }
-  .footer-actions { flex: 1; justify-content: flex-end; }
+  /* Summary */
+  .batch-summary { padding: 10px 12px; font-size: 11.5px; }
 
-  .panel table th, .panel table td { padding: 10px 12px; font-size: 12.5px; }
+  /* Footer */
+  .form-footer {
+    padding: 12px; flex-direction: column;
+    gap: 10px; align-items: stretch;
+  }
+  .calc-hint { font-size: 11px; text-align: center; }
+  .footer-actions { display: flex; gap: 8px; }
+  .footer-actions .btn { flex: 1; padding: 10px 14px; font-size: 13px; }
+
+  /* Table - 卡片式折行 */
+  .panel table { border: none; background: transparent; border-radius: 0; }
+  .panel table thead { display: none; }
+  .panel table, .panel table tbody, .panel table tr, .panel table td {
+    display: block; width: 100%;
+  }
+  .panel table tbody tr {
+    margin-bottom: 12px;
+    background: rgba(17, 23, 39, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .panel table td {
+    padding: 4px 0; font-size: 13px;
+    border-bottom: none;
+    display: flex; justify-content: space-between;
+  }
+  .panel table td::before {
+    content: attr(data-label);
+    font-size: 10.5px; font-weight: 600;
+    color: #475569; text-transform: uppercase; letter-spacing: 0.6px;
+    margin-right: 12px; flex-shrink: 0;
+  }
+  .panel table td b { font-size: 14px; }
+
+  /* Toolbar */
+  .toolbar { gap: 8px; }
+  .toolbar input, .toolbar select {
+    padding: 9px 11px; font-size: 13px;
+  }
+  .toolbar input { flex: 1; min-width: 0; }
+  .spacer { display: none; }
+
+  /* Sub title */
+  .sub-title-row { margin: 22px 0 12px; }
+  .sub-title-row h3 { font-size: 13px; }
+  .sub-title-right input { min-width: 0; width: 100%; }
+
+  /* Draft bar */
+  .draft-bar { padding: 10px 12px; font-size: 12px; }
+
+  /* Toast */
+  .toast {
+    bottom: 20px; font-size: 12.5px;
+    padding: 10px 16px;
+  }
 }
 
+/* ===== 小屏手机（≤480px） ===== */
 @media (max-width: 480px) {
-  .cards { grid-template-columns: 1fr 1fr; }
-  .card-value { font-size: 19px; }
-  .card { padding: 14px; }
-  .form-topbar { padding: 12px; }
+  .content { padding: 14px 12px 40px; }
+  .cards { gap: 6px; }
+  .card { padding: 12px; }
+  .card-value { font-size: 20px; }
+  .card-label { font-size: 9.5px; }
+  .brand-name { font-size: 12px; }
   .field-compact { flex: 1 1 100%; }
+  .month-switch { transform: scale(0.8); }
+}
+
+/* ===== 超小屏（≤360px） ===== */
+@media (max-width: 360px) {
+  .card-value { font-size: 17px; }
+  .cards { gap: 5px; }
+  .card { padding: 10px; }
 }
