@@ -525,26 +525,34 @@ body {
   /* Dashboard empty */
   .dash-empty { padding: 28px 16px; font-size: 12px; }
 
-  /* Form topbar - 折行 */
+  /* Form topbar - 日期+供应商同排，"加一行"折下 */
   .form-topbar {
-    padding: 12px; gap: 10px;
+    padding: 8px; gap: 6px;
     flex-wrap: wrap;
   }
-  .field-compact { flex: 1 1 calc(50% - 5px); min-width: 0; }
-  .field-compact label { font-size: 10px; }
-  .field-compact input {
-    width: 100%; padding: 7px 9px; font-size: 13px;
-    min-width: 0;
+  .form-topbar .field-compact { flex: 1 1 46%; min-width: 0; }
+  .form-topbar .btn {
+    flex: 0 0 auto; padding: 6px 14px; font-size: 12px;
   }
-  .form-topbar .btn { padding: 6px 12px; font-size: 12px; flex-shrink: 0; }
+  /* 把"加一行"按钮强制到下一行，独占 */
+  #si-add-row, #so-add-row {
+    flex: 1 1 100%; margin-top: 2px;
+  }
 
-  /* Batch rows - 紧凑双列 */
-  .batch-head { display: none !important; }
-  .batch-head-in + .batch-body > .batch-row,
-  .batch-head-out + .batch-body > .batch-row {
+  /* 两个 batch-row 并排 —— batch-body 变成 2 列 */
+  #si-rows, #so-rows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 6px;
+  }
+  /* 每个 batch-row 在 2 列 grid 里是独立小卡片 */
+  .batch-head-in + #si-rows > .batch-row,
+  .batch-head-out + #so-rows > .batch-row,
+  #si-rows > .batch-row, #so-rows > .batch-row {
     display: block;
     padding: 8px 10px;
-    margin: 6px 0;
+    margin: 0;
     border-radius: 8px;
     border: 1px solid rgba(99, 102, 241, 0.1);
     background: rgba(10, 15, 26, 0.5);
@@ -558,11 +566,6 @@ body {
   }
   /* 商品名独占整行 */
   .batch-row .c-wrap { grid-column: 1 / -1; }
-  /* 删除按钮浮在右上角 */
-  .batch-row .c-del {
-    position: absolute; top: 2px; right: 2px;
-    width: 22px; height: 22px; font-size: 13px;
-  }
   .batch-row .c-wrap, .batch-row .f,
   .batch-row .c-sub, .batch-row .c-profit, .batch-row .c-stock {
     display: block; width: 100%; min-width: 0; margin: 0;
@@ -571,7 +574,7 @@ body {
     display: block; width: 100%;
     padding: 5px 7px; font-size: 13px;
   }
-  /* 手机端字段标签：小一号，贴紧 */
+  /* 字段标签 */
   .batch-row .c-wrap::before, .batch-row .f::before,
   .batch-row .c-stock::before, .batch-row .c-sub::before,
   .batch-row .c-profit::before {
@@ -579,8 +582,7 @@ body {
     display: block;
     font-size: 9px; font-weight: 600;
     color: #475569; letter-spacing: 0.4px; text-transform: uppercase;
-    margin-bottom: 1px;
-    line-height: 1;
+    margin-bottom: 1px; line-height: 1;
   }
   .batch-row .c-stock, .batch-row .c-sub, .batch-row .c-profit {
     font-size: 12px; color: #94a3b8;
@@ -589,8 +591,10 @@ body {
     border: 1px solid rgba(99, 102, 241, 0.08);
   }
   .batch-row .c-profit { color: #22d3ee; font-weight: 600; }
-  /* 入库：返利、赠金改占半列；出库：库存半列、小计+利润半列 */
-  .batch-head-out + .batch-body > .batch-row { grid-template-columns: 1fr 1fr; }
+  .batch-row .c-del {
+    position: absolute; top: 2px; right: 2px;
+    width: 22px; height: 22px; font-size: 13px;
+  }
 
   /* Summary */
   .batch-summary { padding: 10px 12px; font-size: 11.5px; }
