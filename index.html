@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>进销存管家 · 试用版</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- 顶部栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">📦</div>
+      <div class="brand-text">
+        <div class="brand-name">进销存管家</div>
+        <div class="brand-sub">v0.1</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-tab="dashboard">总览</button>
+      <button class="nav-item" data-tab="stock-in">入库单</button>
+      <button class="nav-item" data-tab="stock-out">出库单</button>
+      <button class="nav-item" data-tab="inventory">库存查询</button>
+      <button class="nav-item" data-tab="records">流水记录</button>
+    </nav>
+    <div class="topbar-right"></div>
+  </header>
+
+  <main class="content">
+
+    <!-- 总览 -->
+    <section id="dashboard" class="panel active">
+      <div class="page-title">
+        <h2>经营数据总览</h2>
+        <p>按自然月统计 · 月度经营与实时库存</p>
+      </div>
+
+      <div class="dash-group">
+        <div class="dash-group-title-bar">
+          <span class="dash-group-title">月度经营</span>
+          <div class="month-switch">
+            <button class="mbtn" id="m-prev" title="上一月">‹</button>
+            <input type="month" id="m-picker">
+            <button class="mbtn" id="m-next" title="下一月">›</button>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card card-indigo">
+            <div class="card-top"><span class="card-label">入库金额</span><span class="card-ico">📥</span></div>
+            <div class="card-value" id="d-in-amount">¥0.00</div>
+          </div>
+          <div class="card card-purple">
+            <div class="card-top"><span class="card-label">返利</span><span class="card-ico">🎁</span></div>
+            <div class="card-value" id="d-rebate">¥0.00</div>
+          </div>
+          <div class="card card-pink">
+            <div class="card-top"><span class="card-label">赠金</span><span class="card-ico">💐</span></div>
+            <div class="card-value" id="d-gift">¥0.00</div>
+          </div>
+          <div class="card card-teal">
+            <div class="card-top"><span class="card-label">利润</span><span class="card-ico">📈</span></div>
+            <div class="card-value" id="d-profit">¥0.00</div>
+          </div>
+        </div>
+        <div id="dash-empty" class="dash-empty hidden">该月暂无记录</div>
+      </div>
+
+      <div class="dash-group">
+        <div class="dash-group-title">实时库存</div>
+        <div class="cards">
+          <div class="card card-emerald">
+            <div class="card-top"><span class="card-label">商品种类</span><span class="card-ico">🏷</span></div>
+            <div class="card-value" id="d-types">0</div>
+          </div>
+          <div class="card card-emerald">
+            <div class="card-top"><span class="card-label">库存总量</span><span class="card-ico">📦</span></div>
+            <div class="card-value" id="d-total-qty">0</div>
+          </div>
+          <div class="card card-amber">
+            <div class="card-top"><span class="card-label">库存总金额</span><span class="card-ico">💰</span></div>
+            <div class="card-value" id="d-total-value">¥0.00</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 入库 -->
+    <section id="stock-in" class="panel">
+      <div class="page-title">
+        <h2>入库单</h2>
+        <p>一张单可录入多种商品，自动核算成本价</p>
+      </div>
+      <form id="stockin-form" class="doc-form">
+        <div class="form-topbar">
+          <div class="field field-compact">
+            <label>日期</label>
+            <input name="date" type="date" id="si-date">
+          </div>
+          <div class="field field-compact">
+            <label>供应商</label>
+            <div class="c-wrap">
+              <input name="supplier" id="supplier-input" autocomplete="off" placeholder="选填">
+              <div class="suggest"></div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-plain btn-sm" id="si-add-row">+ 加一行</button>
+        </div>
+
+        <div class="batch-head batch-head-in">
+          <div class="th">商品名称 <span class="req">*</span></div>
+          <div class="th">数量 <span class="req">*</span></div>
+          <div class="th">单价 <span class="req">*</span></div>
+          <div class="th">返利</div>
+          <div class="th">赠金</div>
+          <div class="th">小计</div>
+          <div class="th th-del"></div>
+        </div>
+        <div class="batch-body" id="si-rows"></div>
+        <div class="batch-summary">
+          共 <b id="si-sum-qty">0</b> 件 &nbsp;|&nbsp;
+          合计 <b id="si-sum-amount">¥0.00</b> &nbsp;|&nbsp;
+          返利 <b id="si-sum-rebate">¥0.00</b> &nbsp;|&nbsp;
+          赠金 <b id="si-sum-gift">¥0.00</b>
+        </div>
+
+        <div class="form-footer">
+          <div class="calc-hint">
+            <span class="hl">成本：</span>(单价 × 数量 − 返利 − 赠金) ÷ 数量
+          </div>
+          <div class="footer-actions">
+            <button type="button" class="btn btn-plain" id="si-clear">清空</button>
+            <button type="submit" class="btn btn-primary">确认入库</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- 出库 -->
+    <section id="stock-out" class="panel">
+      <div class="page-title">
+        <h2>出库单</h2>
+        <p>一张单可出库多种商品，自动核算利润</p>
+      </div>
+      <form id="stockout-form" class="doc-form">
+        <div class="form-topbar">
+          <div class="field field-compact">
+            <label>日期</label>
+            <input name="date" type="date" id="so-date">
+          </div>
+          <div class="field field-compact">
+            <label>客户</label>
+            <div class="c-wrap">
+              <input name="customer" id="customer-input" autocomplete="off" placeholder="选填">
+              <div class="suggest"></div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-plain btn-sm" id="so-add-row">+ 加一行</button>
+        </div>
+
+        <div class="batch-head batch-head-out">
+          <div class="th">商品名称 <span class="req">*</span></div>
+          <div class="th">库存</div>
+          <div class="th">数量 <span class="req">*</span></div>
+          <div class="th">单价 <span class="req">*</span></div>
+          <div class="th">小计</div>
+          <div class="th">预估利润</div>
+          <div class="th th-del"></div>
+        </div>
+        <div class="batch-body" id="so-rows"></div>
+        <div class="batch-summary">
+          共 <b id="so-sum-qty">0</b> 件 &nbsp;|&nbsp;
+          合计 <b id="so-sum-amount">¥0.00</b> &nbsp;|&nbsp;
+          预估利润 <b id="so-sum-profit">¥0.00</b>
+        </div>
+
+        <div class="form-footer">
+          <div class="calc-hint">
+            <span class="hl">利润：</span>(出库单价 − 成本价) × 数量
+          </div>
+          <div class="footer-actions">
+            <button type="button" class="btn btn-plain" id="so-draft">💾 存草稿</button>
+            <button type="button" class="btn btn-plain" id="so-clear">清空</button>
+            <button type="submit" class="btn btn-primary">确认出库</button>
+          </div>
+        </div>
+      </form>
+      <div id="so-draft-bar" class="draft-bar hidden"></div>
+    </section>
+
+    <!-- 库存 -->
+    <section id="inventory" class="panel">
+      <div class="page-title"><h2>库存查询</h2><p>实时商品库存与价值</p></div>
+      <div class="toolbar">
+        <input id="inv-search" placeholder="🔍 搜索商品名称...">
+        <div class="spacer"></div>
+        <button class="btn btn-plain" id="export-btn">⬇ 导出备份</button>
+        <label class="btn btn-plain">⬆ 导入备份<input type="file" id="import-btn" accept=".json" hidden></label>
+      </div>
+      <table id="inv-table">
+        <thead><tr><th>商品</th><th>库存</th><th>成本价</th><th>当前价值</th><th>累计入库</th><th>累计出库</th><th>最近供应商</th><th>操作</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- 记录 -->
+    <section id="records" class="panel">
+      <div class="page-title"><h2>流水记录</h2><p>全部入库与出库明细</p></div>
+      <div class="toolbar">
+        <select id="rec-type">
+          <option value="all">全部类型</option>
+          <option value="in">入库</option>
+          <option value="out">出库</option>
+        </select>
+        <input id="rec-search" placeholder="🔍 搜索商品/备注/客户...">
+        <div class="spacer"></div>
+        <button class="btn btn-danger-ghost" id="clear-all">🗑 清空全部数据</button>
+      </div>
+      <table id="rec-table">
+        <thead><tr><th>日期</th><th>时间</th><th>类型</th><th>商品</th><th>数量</th><th>单价</th><th>金额</th><th>返利/赠金/利润</th><th>备注</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
