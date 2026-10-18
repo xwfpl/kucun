@@ -540,6 +540,7 @@ body {
   }
 
   /* 两个 batch-row 并排 —— batch-body 变成 2 列 */
+  .batch-head { display: none !important; }
   #si-rows, #so-rows {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -559,7 +560,7 @@ body {
   }
   .batch-row {
     display: grid !important;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr !important; /* 压过桌面端 7 列模板 */
     gap: 4px 8px;
     padding: 0;
     position: relative;
