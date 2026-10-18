@@ -54,15 +54,15 @@ function siAddRow() {
   row.className = 'batch-row';
   row.dataset.idx = siRowCount;
   row.innerHTML = `
-    <div class="c-wrap">
+    <div class="c-wrap" data-label="商品名称">
       <input class="c-name" autocomplete="off" placeholder="商品名称">
       <div class="suggest"></div>
     </div>
-    <input class="c-qty" type="number" min="1" step="1" value="1" placeholder="0">
-    <input class="c-price" type="number" min="0" step="0.01" value="0" placeholder="0.00">
-    <input class="c-rebate" type="number" min="0" step="0.01" value="0" placeholder="0.00">
-    <input class="c-gift" type="number" min="0" step="0.01" value="0" placeholder="0.00">
-    <div class="c-sub">¥0.00</div>
+    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" value="1" placeholder="0"></div>
+    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" value="0" placeholder="0.00"></div>
+    <div class="f" data-label="返利"><input class="c-rebate" type="number" min="0" step="0.01" value="0" placeholder="0.00"></div>
+    <div class="f" data-label="赠金"><input class="c-gift" type="number" min="0" step="0.01" value="0" placeholder="0.00"></div>
+    <div class="c-sub" data-label="小计">¥0.00</div>
     <button type="button" class="c-del" title="删除这一行">×</button>
   `;
   SI_ROWS.appendChild(row);
@@ -99,15 +99,15 @@ function soAddRow() {
   const row = document.createElement('div');
   row.className = 'batch-row';
   row.innerHTML = `
-    <div class="c-wrap">
+    <div class="c-wrap" data-label="商品名称">
       <input class="c-name" autocomplete="off" placeholder="输入商品名">
       <div class="suggest"></div>
     </div>
-    <div class="c-stock">-</div>
-    <input class="c-qty" type="number" min="1" step="1" value="1" placeholder="0">
-    <input class="c-price" type="number" min="0" step="0.01" value="0" placeholder="0.00">
-    <div class="c-sub">¥0.00</div>
-    <div class="c-profit">¥0.00</div>
+    <div class="c-stock" data-label="库存">-</div>
+    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" value="1" placeholder="0"></div>
+    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" value="0" placeholder="0.00"></div>
+    <div class="c-sub" data-label="小计">¥0.00</div>
+    <div class="c-profit" data-label="预估利润">¥0.00</div>
     <button type="button" class="c-del" title="删除这一行">×</button>
   `;
   SO_ROWS.appendChild(row);
