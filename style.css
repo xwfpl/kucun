@@ -506,6 +506,12 @@ body {
 .gg-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 .gg-count { font-size: 12px; color: #64748b; }
 .gg-total { font-size: 18px; font-weight: 700; color: #22d3ee; font-variant-numeric: tabular-nums; }
+.gg-total.neg { color: #f87171; }
+.gift-group-head.neg { background: rgba(127,29,29,0.12); }
+.gift-group-head.neg .gg-avatar {
+  background: linear-gradient(135deg, rgba(239,68,68,0.35), rgba(190,24,93,0.35));
+  border-color: rgba(239,68,68,0.3); color: #fca5a5;
+}
 .gg-toggle {
   width: 28px; height: 28px; border-radius: 6px;
   background: transparent; border: 1px solid rgba(99,102,241,0.2);
@@ -531,6 +537,7 @@ body {
 }
 .gift-group-body tr:last-child td { border-bottom: none; }
 .gg-coin { color: #22d3ee; font-weight: 600; }
+.gg-coin.neg { color: #f87171; }
 
 /* ---------- Toast ---------- */
 .toast {
