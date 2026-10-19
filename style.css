@@ -568,7 +568,7 @@ body {
   }
   .batch-row input, .batch-row select {
     display: block; width: 100%;
-    padding: 5px 7px; font-size: 13px;
+    padding: 9px 10px; font-size: 15px;
   }
   /* 字段标签 */
   .batch-row .c-wrap::before, .batch-row .f::before,
@@ -576,13 +576,13 @@ body {
   .batch-row .c-profit::before {
     content: attr(data-label);
     display: block;
-    font-size: 9px; font-weight: 600;
-    color: #475569; letter-spacing: 0.4px; text-transform: uppercase;
-    margin-bottom: 1px; line-height: 1;
+    font-size: 11px; font-weight: 600;
+    color: #64748b; letter-spacing: 0.4px; text-transform: uppercase;
+    margin-bottom: 2px; line-height: 1;
   }
   .batch-row .c-stock, .batch-row .c-sub, .batch-row .c-profit {
-    font-size: 12px; color: #94a3b8;
-    padding: 3px 6px; border-radius: 4px;
+    font-size: 14px; color: #94a3b8;
+    padding: 6px 8px; border-radius: 4px;
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(99, 102, 241, 0.08);
   }
