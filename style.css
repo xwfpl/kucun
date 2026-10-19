@@ -162,9 +162,9 @@ body {
 .dash-empty {
   text-align: center; color: #475569;
   padding: 48px 20px; font-size: 13px;
-  background: rgba(17, 23, 39, 0.6);
+  background: #f8fafc;
   border-radius: 8px;
-  border: 1px dashed rgba(99,102,241,0.15);
+  border: 1px dashed rgba(148,163,184,0.4);
 }
 
 /* ---------- 表单 ---------- */
@@ -179,8 +179,8 @@ body {
 .form-topbar {
   display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap;
   padding: 14px 18px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
-  background: rgba(30, 41, 59, 0.55);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgba(248, 250, 252, 0.7);
 }
 .field-compact { flex: 0 0 auto; }
 .field-compact label {
@@ -208,8 +208,8 @@ body {
   padding: 10px 16px;
   font-size: 11px; font-weight: 700;
   color: #475569; letter-spacing: 0.6px; text-transform: uppercase;
-  background: rgba(30, 41, 59, 0.55);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  background: rgba(248, 250, 252, 0.85);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
 }
 .batch-head-in  { grid-template-columns: 2fr 0.7fr 0.9fr 0.9fr 0.9fr 1fr 36px; }
 .batch-head-out { grid-template-columns: 2fr 0.55fr 0.7fr 0.9fr 1fr 1fr 36px; }
@@ -317,10 +317,10 @@ body {
   display: none;
   position: absolute; top: calc(100% + 4px); left: 0; right: 0;
   max-height: 260px; overflow-y: auto;
-  background: #1a2332;
-  border: 1px solid rgba(6, 182, 212, 0.2);
+  background: #ffffff;
+  border: 1px solid rgba(59, 130, 246, 0.25);
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   display: none;
   z-index: 50;
   backdrop-filter: blur(8px);
@@ -331,12 +331,12 @@ body {
   padding: 9px 12px;
   font-size: 13px; color: #1e293b;
   cursor: pointer;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
   transition: background 0.08s;
 }
 .suggest-item:last-child { border-bottom: none; }
 .suggest-item:hover, .suggest-item.on {
-  background: rgba(6, 182, 212, 0.1);
+  background: rgba(59, 130, 246, 0.08);
   color: #2563eb;
 }
 .suggest-item .s-name { font-weight: 500; letter-spacing: 0.1px; }
@@ -344,23 +344,23 @@ body {
   font-size: 11.5px; color: #64748b;
   font-variant-numeric: tabular-nums;
 }
-.suggest-item:hover .s-meta, .suggest-item.on .s-meta { color: rgba(34,211,238,0.7); }
+.suggest-item:hover .s-meta, .suggest-item.on .s-meta { color: rgba(37, 99, 235, 0.7); }
 .suggest::-webkit-scrollbar { width: 6px; }
-.suggest::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.2); border-radius: 3px; }
+.suggest::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.35); border-radius: 3px; }
 
 .batch-summary {
   padding: 10px 18px;
-  background: rgba(30, 41, 59, 0.55);
-  font-size: 12px; color: #64748b;
-  border-top: 1px solid rgba(148, 163, 184, 0.08);
+  background: rgba(248, 250, 252, 0.8);
+  font-size: 12px; color: #334155;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
 }
 .batch-summary b { color: #1e293b; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .form-footer {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 18px;
-  border-top: 1px solid rgba(148, 163, 184, 0.08);
-  background: rgba(17, 23, 39, 0.6);
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgba(248, 250, 252, 0.8);
   flex-wrap: wrap; gap: 10px;
 }
 .calc-hint { font-size: 12px; color: #475569; }
@@ -371,7 +371,7 @@ body {
 .btn {
   padding: 8px 18px;
   border: 1px solid rgba(148, 163, 184, 0.15);
-  background: rgba(17, 23, 39, 0.6);
+  background: #ffffff;
   border-radius: 7px;
   cursor: pointer;
   font-size: 13px; font-weight: 600;
@@ -389,15 +389,15 @@ body {
   background: linear-gradient(135deg, #60a5fa, #2563eb);
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 2px 10px rgba(6,182,212,0.25);
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.25);
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, #0891b2, #1d4ed8);
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
   box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
   color: #fff;
 }
 .btn-danger {
-  background: rgba(17, 23, 39, 0.6);
+  background: #ffffff;
   color: #1e293b;
   border-color: rgba(148, 163, 184, 0.15);
 }
@@ -433,9 +433,7 @@ body {
 
 .panel table {
   width: 100%; border-collapse: collapse;
-  background: rgba(17, 23, 39, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: #ffffff;
   border-radius: 10px;
   border: 1px solid rgba(148, 163, 184, 0.1);
   overflow: hidden;
@@ -443,19 +441,19 @@ body {
 .panel table th {
   padding: 11px 16px;
   font-size: 10.5px; font-weight: 700;
-  color: #475569; letter-spacing: 0.6px; text-transform: uppercase;
+  color: #64748b; letter-spacing: 0.6px; text-transform: uppercase;
   text-align: left;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
-  background: rgba(30, 41, 59, 0.55);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgba(248, 250, 252, 0.7);
 }
 .panel table td {
   padding: 12px 16px;
-  font-size: 13.5px; color: #cbd5e1;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.05);
+  font-size: 13.5px; color: #334155;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
   font-variant-numeric: tabular-nums;
 }
 .panel table tbody tr:last-child td { border-bottom: none; }
-.panel table tbody tr:hover { background: rgba(148,163,184,0.06); }
+.panel table tbody tr:hover { background: rgba(59, 130, 246, 0.04); }
 .panel table td b { color: #1e293b; font-weight: 700; }
 
 .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
@@ -571,7 +569,7 @@ body {
   font-size: 13px; font-weight: 500;
   opacity: 0; pointer-events: none;
   transition: opacity 0.2s, transform 0.2s;
-  background: rgba(17, 23, 39, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   border: 1px solid rgba(148, 163, 184, 0.2);
   color: #1e293b;
   backdrop-filter: blur(12px);
@@ -584,8 +582,8 @@ body {
 /* ---------- 草稿 ---------- */
 .draft-bar {
   margin-top: 12px; padding: 10px 16px;
-  background: rgba(17, 23, 39, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 8px;
   font-size: 12.5px; color: #64748b;
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
