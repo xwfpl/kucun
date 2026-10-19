@@ -62,6 +62,12 @@ function siAddRow() {
     <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" placeholder="请输入"></div>
     <div class="f" data-label="返利"><input class="c-rebate" type="number" min="0" step="0.01" placeholder="0"></div>
     <div class="f" data-label="金币"><input class="c-gift" type="number" min="0" step="0.01" placeholder="0"></div>
+    <div class="f" data-label="入库人员">
+      <div class="c-wrap">
+        <input class="c-operator" autocomplete="off" placeholder="选填">
+        <div class="suggest"></div>
+      </div>
+    </div>
     <div class="c-sub" data-label="小计">-</div>
     <button type="button" class="c-del" title="删除这一行">×</button>
   `;
@@ -76,8 +82,42 @@ function siAddRow() {
     row.remove(); siRecalc();
   });
   bindSuggest(row, '.c-name');
+  bindTextSuggestForRow(row, '.c-operator', 'in');
   refreshDatalist();
   return row;
+}
+
+// 给每行的入库人员/出库客户加历史候选
+function bindTextSuggestForRow(row, sel, type) {
+  const input = $(sel, row);
+  const box = $('.suggest', row);
+  if (!input || !box) return;
+  const update = () => {
+    const kw = input.value.trim().toLowerCase();
+    const all = DB.getRecords();
+    const map = new Map();
+    for (const r of all) {
+      const v = (type === 'in' ? (r.operator || '') : (r.operator || '')).trim();
+      if (!v) continue;
+      map.set(v, Math.max(map.get(v) || 0, r.time || 0));
+    }
+    const list = [...map.keys()].sort((a, b) => map.get(b) - map.get(a));
+    const filtered = kw ? list.filter(x => x.toLowerCase().includes(kw)) : list;
+    box.innerHTML = filtered.slice(0, 8).map((v, i) =>
+      `<div class="suggest-item" data-v="${escapeHtml(v)}">${escapeHtml(v)}</div>`
+    ).join('');
+    box.classList.toggle('show', !!filtered.length);
+    box.querySelectorAll('.suggest-item').forEach(item => {
+      item.addEventListener('mousedown', (ev) => {
+        ev.preventDefault();
+        input.value = item.dataset.v;
+        box.classList.remove('show');
+      });
+    });
+  };
+  input.addEventListener('focus', update);
+  input.addEventListener('input', update);
+  input.addEventListener('blur', () => setTimeout(() => box.classList.remove('show'), 150));
 }
 function siRecalc() {
   const rows = $$('.batch-row', SI_ROWS);
@@ -406,8 +446,6 @@ function initBatchForms() {
   // 供应商 / 客户历史候选
   bindTextSuggest('#supplier-input', (r) => r.supplier || '');
   bindTextSuggest('#customer-input',  (r) => r.customer  || '');
-  bindTextSuggest('#operator-input',  (r) => r.operator  || '');
-  bindTextSuggest('#so-operator-input', (r) => r.operator || '');
 
   $('#si-add-row').addEventListener('click', () => siAddRow());
   $('#so-add-row').addEventListener('click', () => soAddRow());
@@ -453,7 +491,6 @@ $('#stockin-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const date = $('#si-date').value || todayStr();
   const supplier = $('#stockin-form').supplier.value.trim();
-  const operator = $('#operator-input').value.trim();
   const remark = ($('#stockin-form').remark?.value || '').trim();
 
   const rows = $$('.batch-row', SI_ROWS);
@@ -467,6 +504,7 @@ $('#stockin-form').addEventListener('submit', (e) => {
     const price = +$('.c-price', row).value || 0;
     const rebate = +$('.c-rebate', row).value || 0;
     const gift = +$('.c-gift', row).value || 0;
+    const operator = ($('.c-operator', row)?.value || '').trim();
     if (!name || qty <= 0) { fail++; continue; }
 
     const totalCost = price * qty - rebate - gift;
@@ -506,7 +544,8 @@ $('#stockin-form').addEventListener('submit', (e) => {
     if (r.type === 'in') {
       const last = merged[merged.length - 1];
       if (last && last.type === 'in' && last.date === r.date
-          && last.productId === r.productId && last.price === r.price) {
+          && last.productId === r.productId && last.price === r.price
+          && (last.operator || '') === (r.operator || '')) {
         last.qty += r.qty;
         last.rebate += r.rebate;
         last.giftAmount += (r.giftAmount || 0);
@@ -597,7 +636,6 @@ $('#stockout-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const date = $('#so-date').value || todayStr();
   const customer = $('#stockout-form').customer.value.trim();
-  const operator = $('#so-operator-input').value.trim();
   const remark = ($('#stockout-form').remark?.value || '').trim();
 
   const rows = $$('.batch-row', SO_ROWS);
@@ -622,7 +660,7 @@ $('#stockout-form').addEventListener('submit', (e) => {
       qty, price, costAtOut: p.avgCost,
       amount: price * qty,
       profit: (price - p.avgCost) * qty,
-      customer, operator, remark
+      customer, remark
     });
     ok++;
   }
