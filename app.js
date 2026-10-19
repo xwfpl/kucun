@@ -1,4 +1,4 @@
-/* ========== 数据层 ========== */
+﻿/* ========== 数据层 ========== */
 const DB = {
   KEY_P: 'inv_products', KEY_R: 'inv_records',
   getProducts() { return JSON.parse(localStorage.getItem(this.KEY_P) || '{}'); },
@@ -61,7 +61,7 @@ function siAddRow() {
     <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" placeholder="请输入"></div>
     <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" placeholder="请输入"></div>
     <div class="f" data-label="返利"><input class="c-rebate" type="number" min="0" step="0.01" placeholder="0"></div>
-    <div class="f" data-label="赠金"><input class="c-gift" type="number" min="0" step="0.01" placeholder="0"></div>
+    <div class="f" data-label="金币"><input class="c-gift" type="number" min="0" step="0.01" placeholder="0"></div>
     <div class="c-sub" data-label="小计">-</div>
     <button type="button" class="c-del" title="删除这一行">×</button>
   `;
@@ -346,10 +346,9 @@ function tryCollapseRow(row) {
   row.classList.remove('collapsed');
   row.querySelectorAll('.row-summary').forEach(s => s.remove());
   const qty = +$('.c-qty', row).value || 0;
-  const sub = $('.c-sub', row) ? $('.c-sub', row).textContent : '';
   const summary = document.createElement('div');
   summary.className = 'row-summary';
-  summary.innerHTML = `<span class="rs-name">${escapeHtml(name)}</span><span class="rs-qty">× ${qty}</span><span class="rs-sub">${sub}</span><span class="rs-expand">展开 ▾</span>`;
+  summary.innerHTML = `<span class="rs-name">${escapeHtml(name)}</span><span class="rs-qty">× ${qty}</span><span class="rs-expand">展开 ▾</span>`;
   summary.addEventListener('click', (ev) => {
     ev.stopPropagation();
     row.classList.remove('collapsed');
@@ -428,7 +427,7 @@ function initBatchForms() {
     if (loadSODraft()) toast('已自动恢复上次的出库草稿', 'success');
   }, 100);
 
-  // 入库：商品名自动回填最近的单价/返利/赠金
+  // 入库：商品名自动回填最近的单价/返利/金币
   SI_ROWS.addEventListener('change', (e) => {
     const name = e.target.closest('.c-name');
     if (!name) return;
@@ -496,7 +495,7 @@ $('#stockin-form').addEventListener('submit', (e) => {
     ok++;
   }
 
-  // 合并：同一天同商品同价格 → 数量/返利/赠金累加
+  // 合并：同一天同商品同价格 → 数量/返利/金币累加
   const merged = [];
   for (const r of records) {
     if (r.type === 'in') {
@@ -737,7 +736,7 @@ function renderRecords() {
   }
   $('#rec-table tbody').innerHTML = list.length ? list.map(r => {
     const extras = r.type === 'in'
-      ? `返利 ${fm(r.rebate || 0)} / 赠金 ${fm(r.giftAmount || 0)}`
+      ? `返利 ${fm(r.rebate || 0)} / 金币 ${fm(r.giftAmount || 0)}`
       : `利润 ${fm(r.profit || 0)}`;
     return `<tr>
       <td data-label="日期">${r.date || fmtDate(r.time)}</td>
