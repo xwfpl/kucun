@@ -271,21 +271,22 @@ body {
 .batch-row .row-summary { display: none; }
 .batch-row.collapsed > *:not(.row-summary):not(.c-del) { display: none !important; }
 .batch-row.collapsed {
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   min-height: 48px;
   align-items: center;
-  padding: 10px 12px !important;
+  padding: 10px 40px 10px 12px !important;
   border: 1px solid rgba(6,182,212,0.15) !important;
   background: rgba(10, 15, 26, 0.7) !important;
+  position: relative;
 }
 .batch-row.collapsed .row-summary {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 15px;
-  grid-column: 1 / -1;
   padding: 0;
   cursor: pointer;
+  width: 100%;
 }
 .batch-row.collapsed .row-summary .rs-name {
   font-weight: 700; color: #f1f5f9; font-size: 16px;
@@ -300,11 +301,6 @@ body {
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
-.batch-row.collapsed .row-summary .rs-sub {
-  color: #64748b; font-size: 12px; font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  flex-shrink: 0;
-}
 .batch-row.collapsed .row-summary .rs-expand {
   color: #06b6d4; font-size: 12px; font-weight: 500;
   padding: 4px 10px; border-radius: 5px;
@@ -313,7 +309,11 @@ body {
   flex-shrink: 0;
 }
 .batch-row.collapsed .row-summary .rs-expand:hover { background: rgba(6,182,212,0.12); }
-.batch-row.collapsed .c-del { position: static; }
+.batch-row.collapsed .c-del {
+  position: absolute; top: 8px; right: 6px;
+  width: 26px; height: 26px;
+  z-index: 2;
+}
 
 /* 候选层 */
 .suggest {
