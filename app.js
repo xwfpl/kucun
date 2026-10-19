@@ -240,8 +240,8 @@ function bindSuggest(row, selName, onlyStock = false) {
       el.addEventListener('mousedown', (e) => {
         e.preventDefault();
         input.value = el.dataset.name;
-        box.classList.remove('show');
         input.dispatchEvent(new Event('input'));
+        box.classList.remove('show');
         input.focus();
       });
       el.addEventListener('mouseenter', () => {
@@ -562,11 +562,23 @@ $('#stockin-form').addEventListener('submit', (e) => {
   DB.saveRecords(merged);
   toast(`入库 ${ok} 种商品${fail ? `（${fail} 行已跳过）` : ''}`, 'success');
 
-  // 清空明细行（保留一行空白）
-  SI_ROWS.innerHTML = ''; siRowCount = 0; siAddRow();
+  // 已填行保留商品名，清空数量/单价/返利/金币/人员；再加一行新空白
+  const filledRows = $$('.batch-row', SI_ROWS).filter(r => $('.c-name', r).value.trim());
+  SI_ROWS.innerHTML = ''; siRowCount = 0;
+  filledRows.forEach(r => {
+    const row = siAddRow();
+    $('.c-name', row).value = $('.c-name', r).value.trim();
+    $('.c-qty', row).value = '';
+    $('.c-price', row).value = '';
+    $('.c-rebate', row).value = '';
+    $('.c-gift', row).value = '';
+    if ($('.c-operator', row)) $('.c-operator', row).value = '';
+    // 触发候选历史回填单价等（如果有）
+    const evt = new Event('input');
+    $('.c-name', row).dispatchEvent(evt);
+  });
+  siAddRow(); // 再加一行空的
   $('#si-date').value = todayStr();
-  $('#stockin-form').supplier.value = '';
-  $('#stockin-form').remark && ($('#stockin-form').remark.value = '');
   siRecalc();
   refreshAll();
 });
