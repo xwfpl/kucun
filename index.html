@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>进销存管家 · 试用版</title>
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 
@@ -23,6 +23,7 @@
       <button class="nav-item" data-tab="stock-in">入库单</button>
       <button class="nav-item" data-tab="stock-out">出库单</button>
       <button class="nav-item" data-tab="inventory">库存查询</button>
+      <button class="nav-item" data-tab="gift">金币统计</button>
       <button class="nav-item" data-tab="records">流水记录</button>
     </nav>
     <div class="topbar-right"></div>
@@ -202,6 +203,18 @@
         <thead><tr><th>商品</th><th>库存</th><th>成本价</th><th>当前价值</th><th>累计入库</th><th>累计出库</th><th>最近供应商</th><th>操作</th></tr></thead>
         <tbody></tbody>
       </table>
+    </section>
+
+    <!-- 金币统计 -->
+    <section id="gift" class="panel">
+      <div class="page-title"><h2>金币统计</h2><p>按入库人员汇总金币明细</p></div>
+      <div class="toolbar">
+        <input id="gift-search" placeholder="🔍 搜索入库人员...">
+        <div class="spacer"></div>
+        <span class="gift-total-label">全部人员合计金币：<b id="gift-grand-total">¥0.00</b></span>
+      </div>
+      <div id="gift-groups"></div>
+      <div id="gift-empty" class="dash-empty hidden">暂无金币记录</div>
     </section>
 
     <!-- 记录 -->
