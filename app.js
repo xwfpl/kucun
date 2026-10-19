@@ -756,9 +756,10 @@ function renderInventory() {
   const host = $('#inv-list');
   $('#inv-empty').classList.toggle('hidden', list.length > 0);
   host.innerHTML = list.map(p => {
-    const lastOp = records
+    const allOps = [...new Set(records
       .filter(r => r.type === 'in' && r.productId === p.id && r.operator)
-      .sort((a, b) => (b.time || 0) - (a.time || 0))[0]?.operator || '-';
+      .map(r => r.operator))];
+    const opHtml = allOps.length ? allOps.map(o => `<span class="op-tag">${escapeHtml(o)}</span>`).join(' ') : '-';
     return `<div class="inv-card">
       <div class="inv-card-head">
         <span class="inv-name">${escapeHtml(p.name)}</span>
@@ -769,9 +770,9 @@ function renderInventory() {
           <div class="inv-f-label">库存</div>
           <div class="inv-f-value inv-qty">${p.qty}</div>
         </div>
-        <div class="inv-field">
-          <div class="inv-f-label">最近入库人员</div>
-          <div class="inv-f-value inv-op">${escapeHtml(lastOp)}</div>
+        <div class="inv-field inv-field-wide">
+          <div class="inv-f-label">全部入库人员</div>
+          <div class="inv-f-value inv-op">${opHtml}</div>
         </div>
       </div>
     </div>`;
