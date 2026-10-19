@@ -62,9 +62,9 @@ function siAddRow() {
     <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" placeholder="请输入"></div>
     <div class="f" data-label="返利"><input class="c-rebate" type="number" step="0.01" placeholder="0"></div>
     <div class="f" data-label="金币"><input class="c-gift" type="number" step="0.01" placeholder="0"></div>
-    <div class="f" data-label="入库人员">
+    <div class="f" data-label="入库人员 *">
       <div class="c-wrap">
-        <input class="c-operator" autocomplete="off" placeholder="选填">
+        <input class="c-operator" autocomplete="off" placeholder="必填">
         <div class="suggest"></div>
       </div>
     </div>
@@ -505,6 +505,7 @@ $('#stockin-form').addEventListener('submit', (e) => {
     const gift = +$('.c-gift', row).value || 0;
     const operator = ($('.c-operator', row)?.value || '').trim();
     if (!name || qty <= 0) { fail++; continue; }
+    if (!operator) { toast('请填写每行的入库人员', 'error'); fail++; continue; }
 
     const totalCost = price * qty - rebate - gift;
     const avgCost = qty > 0 ? totalCost / qty : 0;
@@ -754,20 +755,16 @@ function renderInventory() {
   const list = kw ? products.filter(p => p.name.toLowerCase().includes(kw)) : products;
   const tbody = $('#inv-table tbody');
   tbody.innerHTML = list.length ? list.map(p => {
-    const lastSupplier = records
-      .filter(r => r.type === 'in' && r.productId === p.id && r.supplier)
-      .map(r => r.supplier)[0] || '-';
+    const lastOp = records
+      .filter(r => r.type === 'in' && r.productId === p.id && r.operator)
+      .sort((a, b) => (b.time || 0) - (a.time || 0))[0]?.operator || '-';
     return `<tr>
       <td data-label="商品"><b>${p.name}</b></td>
       <td data-label="库存">${p.qty}</td>
-      <td data-label="成本价">${fm(p.avgCost)}</td>
-      <td data-label="当前价值">${fm(p.qty * p.avgCost)}</td>
-      <td data-label="累计入库">${p.totalIn}</td>
-      <td data-label="累计出库">${p.totalOut}</td>
-      <td data-label="最近供应商">${lastSupplier}</td>
+      <td data-label="最近入库人员">${lastOp}</td>
       <td data-label="操作"><button class="link-btn" data-del="${p.id}">删除</button></td>
     </tr>`;
-  }).join('') : '<tr><td data-label="提示" colspan="8" style="text-align:center;color:#999;padding:24px">暂无库存</td></tr>';
+  }).join('') : '<tr><td data-label="提示" colspan="4" style="text-align:center;color:#999;padding:24px">暂无库存</td></tr>';
   tbody.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = () => {
       if (!confirm('确定删除？历史记录保留。')) return;
