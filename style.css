@@ -18,7 +18,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
@@ -478,6 +478,7 @@ body {
 /* ===== 手机端（≤768px） ===== */
 @media (max-width: 768px) {
   body {
+    font-size: 16px;
     overscroll-behavior-y: contain;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
@@ -655,6 +656,7 @@ body {
 
 /* ===== 小屏手机（≤480px） ===== */
 @media (max-width: 480px) {
+  body { font-size: 16px; }
   .content { padding: 14px 12px 40px; }
   .cards { gap: 6px; }
   .card { padding: 12px; }
