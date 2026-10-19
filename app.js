@@ -242,7 +242,6 @@ function bindSuggest(row, selName, onlyStock = false) {
         input.value = el.dataset.name;
         input.dispatchEvent(new Event('input'));
         box.classList.remove('show');
-        input.focus();
       });
       el.addEventListener('mouseenter', () => {
         highlight = [...box.querySelectorAll('.suggest-item')].indexOf(el);
