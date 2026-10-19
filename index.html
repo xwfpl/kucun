@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>进销存管家 · 试用版</title>
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
 
@@ -56,7 +56,7 @@
             <div class="card-value" id="d-rebate">¥0.00</div>
           </div>
           <div class="card card-pink">
-            <div class="card-top"><span class="card-label">赠金</span><span class="card-ico">💐</span></div>
+            <div class="card-top"><span class="card-label">金币</span><span class="card-ico">💐</span></div>
             <div class="card-value" id="d-gift">¥0.00</div>
           </div>
           <div class="card card-teal">
@@ -113,7 +113,7 @@
           <div class="th">数量 <span class="req">*</span></div>
           <div class="th">单价 <span class="req">*</span></div>
           <div class="th">返利</div>
-          <div class="th">赠金</div>
+          <div class="th">金币</div>
           <div class="th">小计</div>
           <div class="th th-del"></div>
         </div>
@@ -122,12 +122,12 @@
           共 <b id="si-sum-qty">0</b> 件 &nbsp;|&nbsp;
           合计 <b id="si-sum-amount">¥0.00</b> &nbsp;|&nbsp;
           返利 <b id="si-sum-rebate">¥0.00</b> &nbsp;|&nbsp;
-          赠金 <b id="si-sum-gift">¥0.00</b>
+          金币 <b id="si-sum-gift">¥0.00</b>
         </div>
 
         <div class="form-footer">
           <div class="calc-hint">
-            <span class="hl">成本：</span>(单价 × 数量 − 返利 − 赠金) ÷ 数量
+            <span class="hl">成本：</span>(单价 × 数量 − 返利 − 金币) ÷ 数量
           </div>
           <div class="footer-actions">
             <button type="button" class="btn btn-plain" id="si-clear">清空</button>
@@ -218,7 +218,7 @@
         <button class="btn btn-danger-ghost" id="clear-all">🗑 清空全部数据</button>
       </div>
       <table id="rec-table">
-        <thead><tr><th>日期</th><th>时间</th><th>类型</th><th>商品</th><th>数量</th><th>单价</th><th>金额</th><th>返利/赠金/利润</th><th>备注</th></tr></thead>
+        <thead><tr><th>日期</th><th>时间</th><th>类型</th><th>商品</th><th>数量</th><th>单价</th><th>金额</th><th>返利/金币/利润</th><th>备注</th></tr></thead>
         <tbody></tbody>
       </table>
     </section>
