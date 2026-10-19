@@ -686,6 +686,7 @@ function refreshAll() {
   renderDashboard();
   renderInventory();
   renderRecords();
+  renderGift();
   refreshDatalist();
   siRecalc(); soRecalc();
 }
@@ -796,10 +797,74 @@ function renderRecords() {
   }).join('') : '<tr><td data-label="提示" colspan="9" style="text-align:center;color:#999;padding:24px">暂无记录</td></tr>';
 }
 
+/* ========== 金币统计 ========== */
+let giftFilter = { kw: '' };
+function renderGift() {
+  const kw = giftFilter.kw.toLowerCase();
+  const records = DB.getRecords();
+  // 只取入库有金币的记录，按 operator 分组
+  const groups = {};
+  let grandTotal = 0;
+  for (const r of records) {
+    if (r.type !== 'in') continue;
+    if (!(r.giftAmount > 0)) continue;
+    const op = (r.operator || '').trim() || '(未填写)';
+    if (kw && !op.toLowerCase().includes(kw)) continue;
+    if (!groups[op]) groups[op] = { operator: op, total: 0, items: [] };
+    groups[op].total += r.giftAmount;
+    groups[op].items.push(r);
+    grandTotal += r.giftAmount;
+  }
+  const list = Object.values(groups).sort((a, b) => b.total - a.total);
+  $('#gift-grand-total').textContent = fm(grandTotal);
+  $('#gift-empty').classList.toggle('hidden', list.length > 0);
+  $('#gift-groups').innerHTML = list.map(g => {
+    g.items.sort((a, b) => (b.time || 0) - (a.time || 0));
+    return `<div class="gift-group">
+      <div class="gift-group-head">
+        <div class="gg-left">
+          <span class="gg-avatar">${escapeHtml(g.operator.slice(0, 1))}</span>
+          <span class="gg-name">${escapeHtml(g.operator)}</span>
+        </div>
+        <div class="gg-right">
+          <span class="gg-count">${g.items.length} 笔</span>
+          <span class="gg-total">${fm(g.total)}</span>
+          <button class="gg-toggle" data-op="${escapeHtml(g.operator)}">▾</button>
+        </div>
+      </div>
+      <div class="gift-group-body hidden" data-op="${escapeHtml(g.operator)}">
+        <table>
+          <thead><tr><th>日期</th><th>商品</th><th>数量</th><th>单价</th><th>返利</th><th>金币</th><th>供应商</th></tr></thead>
+          <tbody>${g.items.map(r => `
+            <tr>
+              <td data-label="日期">${r.date || fmtDate(r.time)}</td>
+              <td data-label="商品">${r.name}</td>
+              <td data-label="数量">${r.qty}</td>
+              <td data-label="单价">${fm(r.price)}</td>
+              <td data-label="返利">${fm(r.rebate || 0)}</td>
+              <td data-label="金币"><b class="gg-coin">${fm(r.giftAmount)}</b></td>
+              <td data-label="供应商">${r.supplier || '-'}</td>
+            </tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>`;
+  }).join('');
+  // 展开折叠
+  $$('.gg-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const op = btn.dataset.op;
+      const body = $(`.gift-group-body[data-op="${op}"]`);
+      const hidden = body.classList.toggle('hidden');
+      btn.textContent = hidden ? '▾' : '▴';
+    });
+  });
+}
+
 /* ========== 搜索/过滤 ========== */
 $('#inv-search').addEventListener('input', renderInventory);
 $('#rec-type').addEventListener('change', (e) => { recFilter.type = e.target.value; renderRecords(); });
 $('#rec-search').addEventListener('input', (e) => { recFilter.kw = e.target.value.trim(); renderRecords(); });
+$('#gift-search').addEventListener('input', (e) => { giftFilter.kw = e.target.value.trim(); renderGift(); });
 
 /* ========== 导入导出 ========== */
 $('#export-btn').addEventListener('click', () => {
