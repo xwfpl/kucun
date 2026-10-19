@@ -58,10 +58,10 @@ function siAddRow() {
       <input class="c-name" autocomplete="off" placeholder="商品名称">
       <div class="suggest"></div>
     </div>
-    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" value="1" placeholder="0"></div>
-    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" value="0" placeholder="0.00"></div>
-    <div class="f" data-label="返利"><input class="c-rebate" type="number" min="0" step="0.01" value="0" placeholder="0.00"></div>
-    <div class="f" data-label="赠金"><input class="c-gift" type="number" min="0" step="0.01" value="0" placeholder="0.00"></div>
+    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" value="1"></div>
+    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" value="0"></div>
+    <div class="f" data-label="返利"><input class="c-rebate" type="number" min="0" step="0.01" value="0"></div>
+    <div class="f" data-label="赠金"><input class="c-gift" type="number" min="0" step="0.01" value="0"></div>
     <div class="c-sub" data-label="小计">¥0.00</div>
     <button type="button" class="c-del" title="删除这一行">×</button>
   `;
@@ -104,8 +104,8 @@ function soAddRow() {
       <div class="suggest"></div>
     </div>
     <div class="c-stock" data-label="库存">-</div>
-    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" value="1" placeholder="0"></div>
-    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" value="0" placeholder="0.00"></div>
+    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" value="1"></div>
+    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" value="0"></div>
     <div class="c-sub" data-label="小计">¥0.00</div>
     <div class="c-profit" data-label="预估利润">¥0.00</div>
     <button type="button" class="c-del" title="删除这一行">×</button>
@@ -328,21 +328,25 @@ document.addEventListener('keydown', (e) => {
   if (first) first.focus();
 });
 
-// 折叠行：有商品名时才折叠；展开按钮点击恢复
+// 折叠行：有商品名时才折叠；展开按钮点击恢复；支持反复折叠/展开
 function tryCollapseRow(row) {
   const name = $('.c-name', row).value.trim();
   if (!name) return; // 空行不折叠
-  // 已有 collapsed 摘要则跳过
-  if (row.querySelector('.row-summary')) return;
+  // 清理旧状态
+  row.classList.remove('collapsed');
+  row.querySelectorAll('.row-summary').forEach(s => s.remove());
+  // 构建新的折叠摘要
   const qty = +$('.c-qty', row).value || 0;
   const sub = $('.c-sub', row) ? $('.c-sub', row).textContent : '';
   const summary = document.createElement('div');
   summary.className = 'row-summary';
-  summary.innerHTML = `<span class="rs-name">${escapeHtml(name)}</span><span class="rs-qty">× ${qty}</span><span class="rs-sub">${sub}</span><span class="rs-expand" title="展开">展开 ▾</span>`;
-  summary.addEventListener('click', () => {
+  summary.innerHTML = `<span class="rs-name">${escapeHtml(name)}</span><span class="rs-qty">× ${qty}</span><span class="rs-sub">${sub}</span><span class="rs-expand" title="展开此行继续编辑">展开 ▾</span>`;
+  // 点击摘要展开
+  summary.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    if (summary.classList.contains('rs-deleting')) return;
     row.classList.remove('collapsed');
     summary.remove();
-    $('.c-name', row).focus();
   });
   row.appendChild(summary);
   row.classList.add('collapsed');
