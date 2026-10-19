@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>进销存管家 · 试用版</title>
-<link rel="stylesheet" href="style.css?v=15">
+<link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 
@@ -105,6 +105,13 @@
               <div class="suggest"></div>
             </div>
           </div>
+          <div class="field field-compact">
+            <label>入库人员</label>
+            <div class="c-wrap">
+              <input name="operator" id="operator-input" autocomplete="off" placeholder="选填">
+              <div class="suggest"></div>
+            </div>
+          </div>
           <button type="button" class="btn btn-plain btn-sm" id="si-add-row">+ 加一行</button>
         </div>
 
@@ -153,6 +160,13 @@
             <label>客户</label>
             <div class="c-wrap">
               <input name="customer" id="customer-input" autocomplete="off" placeholder="选填">
+              <div class="suggest"></div>
+            </div>
+          </div>
+          <div class="field field-compact">
+            <label>出库人员</label>
+            <div class="c-wrap">
+              <input name="operator" id="so-operator-input" autocomplete="off" placeholder="选填">
               <div class="suggest"></div>
             </div>
           </div>
