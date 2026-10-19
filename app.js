@@ -71,6 +71,7 @@ function siAddRow() {
     i.addEventListener('blur', () => maybeCollapseOnBlur(row, SI_ROWS));
   });
   row.querySelector('.c-del').addEventListener('click', () => {
+    if (!confirm('确定删除这一行吗？')) return;
     if (SI_ROWS.children.length <= 1) { toast('至少保留一行', 'error'); return; }
     row.remove(); siRecalc();
   });
@@ -121,6 +122,7 @@ function soAddRow() {
     i.addEventListener('blur', () => maybeCollapseOnBlur(row, SO_ROWS));
   });
   row.querySelector('.c-del').addEventListener('click', () => {
+    if (!confirm('确定删除这一行吗？')) return;
     if (SO_ROWS.children.length <= 1) { toast('至少保留一行', 'error'); return; }
     row.remove(); soRecalc();
   });
@@ -404,6 +406,8 @@ function initBatchForms() {
   // 供应商 / 客户历史候选
   bindTextSuggest('#supplier-input', (r) => r.supplier || '');
   bindTextSuggest('#customer-input',  (r) => r.customer  || '');
+  bindTextSuggest('#operator-input',  (r) => r.operator  || '');
+  bindTextSuggest('#so-operator-input', (r) => r.operator || '');
 
   $('#si-add-row').addEventListener('click', () => siAddRow());
   $('#so-add-row').addEventListener('click', () => soAddRow());
@@ -449,6 +453,7 @@ $('#stockin-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const date = $('#si-date').value || todayStr();
   const supplier = $('#stockin-form').supplier.value.trim();
+  const operator = $('#operator-input').value.trim();
   const remark = ($('#stockin-form').remark?.value || '').trim();
 
   const rows = $$('.batch-row', SI_ROWS);
@@ -490,7 +495,7 @@ $('#stockin-form').addEventListener('submit', (e) => {
       productId: product.id, name: product.name, unit: product.unit,
       qty, giftAmount: gift, price, rebate,
       amount: price * qty, actualCost: totalCost,
-      supplier, remark
+      supplier, operator, remark
     });
     ok++;
   }
@@ -592,6 +597,7 @@ $('#stockout-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const date = $('#so-date').value || todayStr();
   const customer = $('#stockout-form').customer.value.trim();
+  const operator = $('#so-operator-input').value.trim();
   const remark = ($('#stockout-form').remark?.value || '').trim();
 
   const rows = $$('.batch-row', SO_ROWS);
@@ -616,7 +622,7 @@ $('#stockout-form').addEventListener('submit', (e) => {
       qty, price, costAtOut: p.avgCost,
       amount: price * qty,
       profit: (price - p.avgCost) * qty,
-      customer, remark
+      customer, operator, remark
     });
     ok++;
   }
@@ -747,7 +753,7 @@ function renderRecords() {
       <td data-label="单价">${fm(r.price)}</td>
       <td data-label="金额"><b>${fm(r.amount)}</b></td>
       <td data-label="备注">${extras}</td>
-      <td data-label="附加">${r.remark || r.supplier || r.customer || '-'}</td>
+      <td data-label="附加">${[r.supplier, r.customer, r.operator, r.remark].filter(Boolean).join(' · ') || '-'}</td>
     </tr>`;
   }).join('') : '<tr><td data-label="提示" colspan="9" style="text-align:center;color:#999;padding:24px">暂无记录</td></tr>';
 }
