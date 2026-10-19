@@ -539,33 +539,28 @@ body {
     flex: 1 1 100%; margin-top: 2px;
   }
 
-  /* 两个 batch-row 并排 —— batch-body 变成 2 列 */
+  /* 商品列表 —— 每个商品占整屏宽度 */
   .batch-head { display: none !important; }
   #si-rows, #so-rows {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
+    display: block;
     padding: 6px;
   }
-  /* 每个 batch-row 在 2 列 grid 里是独立小卡片 */
-  .batch-head-in + #si-rows > .batch-row,
-  .batch-head-out + #so-rows > .batch-row,
   #si-rows > .batch-row, #so-rows > .batch-row {
     display: block;
     padding: 8px 10px;
-    margin: 0;
+    margin: 6px 0;
     border-radius: 8px;
     border: 1px solid rgba(99, 102, 241, 0.1);
     background: rgba(10, 15, 26, 0.5);
   }
   .batch-row {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important; /* 压过桌面端 7 列模板 */
-    gap: 4px 8px;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4px 10px;
     padding: 0;
     position: relative;
   }
-  /* 商品名独占整行 */
+  /* 商品名独占整行（满屏宽度） */
   .batch-row .c-wrap { grid-column: 1 / -1; }
   .batch-row .c-wrap, .batch-row .f,
   .batch-row .c-sub, .batch-row .c-profit, .batch-row .c-stock {
