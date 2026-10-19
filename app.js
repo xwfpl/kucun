@@ -58,11 +58,11 @@ function siAddRow() {
       <input class="c-name" autocomplete="off" placeholder="商品名称">
       <div class="suggest"></div>
     </div>
-    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" value="1"></div>
-    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" value="0"></div>
-    <div class="f" data-label="返利"><input class="c-rebate" type="number" min="0" step="0.01" value="0"></div>
-    <div class="f" data-label="赠金"><input class="c-gift" type="number" min="0" step="0.01" value="0"></div>
-    <div class="c-sub" data-label="小计">¥0.00</div>
+    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" placeholder="请输入"></div>
+    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" placeholder="请输入"></div>
+    <div class="f" data-label="返利"><input class="c-rebate" type="number" min="0" step="0.01" placeholder="0"></div>
+    <div class="f" data-label="赠金"><input class="c-gift" type="number" min="0" step="0.01" placeholder="0"></div>
+    <div class="c-sub" data-label="小计">-</div>
     <button type="button" class="c-del" title="删除这一行">×</button>
   `;
   SI_ROWS.appendChild(row);
@@ -83,9 +83,8 @@ function siRecalc() {
     const price = +$('.c-price', row).value || 0;
     const reb = +$('.c-rebate', row).value || 0;
     const gift = +$('.c-gift', row).value || 0;
-    const sub = qty * price;
-    $('.c-sub', row).textContent = fm(sub);
-    totQty += qty; totAmt += sub; totReb += reb; totGift += gift;
+    $('.c-sub', row).textContent = (qty && price) ? fm(qty * price) : '-';
+    totQty += qty; totAmt += qty * price; totReb += reb; totGift += gift;
   });
   $('#si-sum-qty').textContent = totQty;
   $('#si-sum-amount').textContent = fm(totAmt);
@@ -104,10 +103,10 @@ function soAddRow() {
       <div class="suggest"></div>
     </div>
     <div class="c-stock" data-label="库存">-</div>
-    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" value="1"></div>
-    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" value="0"></div>
-    <div class="c-sub" data-label="小计">¥0.00</div>
-    <div class="c-profit" data-label="预估利润">¥0.00</div>
+    <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" placeholder="请输入"></div>
+    <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" placeholder="请输入"></div>
+    <div class="c-sub" data-label="小计">-</div>
+    <div class="c-profit" data-label="预估利润">-</div>
     <button type="button" class="c-del" title="删除这一行">×</button>
   `;
   SO_ROWS.appendChild(row);
@@ -134,11 +133,16 @@ function soRecalcRow(row) {
   }
   const qty = +$('.c-qty', row).value || 0;
   const price = +$('.c-price', row).value || 0;
-  const sub = qty * price;
-  let profit = 0;
-  if (p) profit = (price - p.avgCost) * qty;
-  $('.c-sub', row).textContent = fm(sub);
-  $('.c-profit', row).textContent = fm(profit);
+  const hasVal = qty && price;
+  if (hasVal) {
+    $('.c-sub', row).textContent = fm(qty * price);
+    let profit = 0;
+    if (p) profit = (price - p.avgCost) * qty;
+    $('.c-profit', row).textContent = fm(profit);
+  } else {
+    $('.c-sub', row).textContent = '-';
+    $('.c-profit', row).textContent = '-';
+  }
   soRecalc();
 }
 function soRecalc() {
