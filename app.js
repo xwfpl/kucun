@@ -60,8 +60,8 @@ function siAddRow() {
     </div>
     <div class="f" data-label="数量"><input class="c-qty" type="number" min="1" step="1" placeholder="请输入"></div>
     <div class="f" data-label="单价"><input class="c-price" type="number" min="0" step="0.01" placeholder="请输入"></div>
-    <div class="f" data-label="返利"><input class="c-rebate" type="number" min="0" step="0.01" placeholder="0"></div>
-    <div class="f" data-label="金币"><input class="c-gift" type="number" min="0" step="0.01" placeholder="0"></div>
+    <div class="f" data-label="返利"><input class="c-rebate" type="number" step="0.01" placeholder="0"></div>
+    <div class="f" data-label="金币"><input class="c-gift" type="number" step="0.01" placeholder="0"></div>
     <div class="f" data-label="入库人员">
       <div class="c-wrap">
         <input class="c-operator" autocomplete="off" placeholder="选填">
