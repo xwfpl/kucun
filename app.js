@@ -753,19 +753,30 @@ function renderInventory() {
   const records = DB.getRecords();
   const kw = $('#inv-search').value.trim().toLowerCase();
   const list = kw ? products.filter(p => p.name.toLowerCase().includes(kw)) : products;
-  const tbody = $('#inv-table tbody');
-  tbody.innerHTML = list.length ? list.map(p => {
+  const host = $('#inv-list');
+  $('#inv-empty').classList.toggle('hidden', list.length > 0);
+  host.innerHTML = list.map(p => {
     const lastOp = records
       .filter(r => r.type === 'in' && r.productId === p.id && r.operator)
       .sort((a, b) => (b.time || 0) - (a.time || 0))[0]?.operator || '-';
-    return `<tr>
-      <td data-label="商品"><b>${p.name}</b></td>
-      <td data-label="库存">${p.qty}</td>
-      <td data-label="最近入库人员">${lastOp}</td>
-      <td data-label="操作"><button class="link-btn" data-del="${p.id}">删除</button></td>
-    </tr>`;
-  }).join('') : '<tr><td data-label="提示" colspan="4" style="text-align:center;color:#999;padding:24px">暂无库存</td></tr>';
-  tbody.querySelectorAll('[data-del]').forEach(btn => {
+    return `<div class="inv-card">
+      <div class="inv-card-head">
+        <span class="inv-name">${escapeHtml(p.name)}</span>
+        <button class="link-btn inv-del" data-del="${p.id}">删除</button>
+      </div>
+      <div class="inv-card-body">
+        <div class="inv-field">
+          <div class="inv-f-label">库存</div>
+          <div class="inv-f-value inv-qty">${p.qty}</div>
+        </div>
+        <div class="inv-field">
+          <div class="inv-f-label">最近入库人员</div>
+          <div class="inv-f-value inv-op">${escapeHtml(lastOp)}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  host.querySelectorAll('[data-del]').forEach(btn => {
     btn.onclick = () => {
       if (!confirm('确定删除？历史记录保留。')) return;
       const ps = DB.getProducts(); delete ps[btn.dataset.del]; DB.saveProducts(ps);
