@@ -802,18 +802,19 @@ let giftFilter = { kw: '' };
 function renderGift() {
   const kw = giftFilter.kw.toLowerCase();
   const records = DB.getRecords();
-  // 只取入库有金币的记录，按 operator 分组
+  // 只取入库记录，按 operator 分组，正负数都算
   const groups = {};
   let grandTotal = 0;
   for (const r of records) {
     if (r.type !== 'in') continue;
-    if (!(r.giftAmount > 0)) continue;
     const op = (r.operator || '').trim() || '(未填写)';
     if (kw && !op.toLowerCase().includes(kw)) continue;
+    const gift = +(r.giftAmount || 0);
+    if (gift === 0) continue;
     if (!groups[op]) groups[op] = { operator: op, total: 0, items: [] };
-    groups[op].total += r.giftAmount;
+    groups[op].total += gift;
     groups[op].items.push(r);
-    grandTotal += r.giftAmount;
+    grandTotal += gift;
   }
   const list = Object.values(groups).sort((a, b) => b.total - a.total);
   $('#gift-grand-total').textContent = fm(grandTotal);
@@ -821,30 +822,32 @@ function renderGift() {
   $('#gift-groups').innerHTML = list.map(g => {
     g.items.sort((a, b) => (b.time || 0) - (a.time || 0));
     return `<div class="gift-group">
-      <div class="gift-group-head">
+      <div class="gift-group-head${g.total < 0 ? ' neg' : ''}">
         <div class="gg-left">
           <span class="gg-avatar">${escapeHtml(g.operator.slice(0, 1))}</span>
           <span class="gg-name">${escapeHtml(g.operator)}</span>
         </div>
         <div class="gg-right">
           <span class="gg-count">${g.items.length} 笔</span>
-          <span class="gg-total">${fm(g.total)}</span>
+          <span class="gg-total${g.total < 0 ? ' neg' : ''}">${fm(g.total)}</span>
           <button class="gg-toggle" data-op="${escapeHtml(g.operator)}">▾</button>
         </div>
       </div>
       <div class="gift-group-body hidden" data-op="${escapeHtml(g.operator)}">
         <table>
           <thead><tr><th>日期</th><th>商品</th><th>数量</th><th>单价</th><th>返利</th><th>金币</th><th>供应商</th></tr></thead>
-          <tbody>${g.items.map(r => `
-            <tr>
+          <tbody>${g.items.map(r => {
+            const gv = +(r.giftAmount || 0);
+            return `<tr>
               <td data-label="日期">${r.date || fmtDate(r.time)}</td>
               <td data-label="商品">${r.name}</td>
               <td data-label="数量">${r.qty}</td>
               <td data-label="单价">${fm(r.price)}</td>
               <td data-label="返利">${fm(r.rebate || 0)}</td>
-              <td data-label="金币"><b class="gg-coin">${fm(r.giftAmount)}</b></td>
+              <td data-label="金币"><b class="gg-coin${gv < 0 ? ' neg' : ''}">${gv < 0 ? fm(gv) : '+' + fm(gv)}</b></td>
               <td data-label="供应商">${r.supplier || '-'}</td>
-            </tr>`).join('')}</tbody>
+            </tr>`;
+          }).join('')}</tbody>
         </table>
       </div>
     </div>`;
