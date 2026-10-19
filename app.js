@@ -311,9 +311,11 @@ document.addEventListener('keydown', (e) => {
     if (inputs[idx + 1].select) inputs[idx + 1].select();
     return;
   }
-  // 到一行最后一格 → 跳到下一行第一格（如果有）
+  // 到一行最后一格 → 折叠当前行并跳到下一行第一格（如果有）
+  tryCollapseRow(row);
   const nextRow = row.nextElementSibling;
   if (nextRow) {
+    nextRow.classList.remove('collapsed'); // 新行展开
     const first = nextRow.querySelector('input, select');
     if (first) { first.focus(); if (first.select) first.select(); return; }
   }
@@ -325,6 +327,26 @@ document.addEventListener('keydown', (e) => {
   const first = newRow.querySelector('input, select');
   if (first) first.focus();
 });
+
+// 折叠行：有商品名时才折叠；展开按钮点击恢复
+function tryCollapseRow(row) {
+  const name = $('.c-name', row).value.trim();
+  if (!name) return; // 空行不折叠
+  // 已有 collapsed 摘要则跳过
+  if (row.querySelector('.row-summary')) return;
+  const qty = +$('.c-qty', row).value || 0;
+  const sub = $('.c-sub', row) ? $('.c-sub', row).textContent : '';
+  const summary = document.createElement('div');
+  summary.className = 'row-summary';
+  summary.innerHTML = `<span class="rs-name">${escapeHtml(name)}</span><span class="rs-qty">× ${qty}</span><span class="rs-sub">${sub}</span><span class="rs-expand" title="展开">展开 ▾</span>`;
+  summary.addEventListener('click', () => {
+    row.classList.remove('collapsed');
+    summary.remove();
+    $('.c-name', row).focus();
+  });
+  row.appendChild(summary);
+  row.classList.add('collapsed');
+}
 
 /* ========== 初始化 ========== */
 function initBatchForms() {
