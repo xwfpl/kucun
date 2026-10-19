@@ -66,7 +66,10 @@ function siAddRow() {
     <button type="button" class="c-del" title="删除这一行">×</button>
   `;
   SI_ROWS.appendChild(row);
-  row.querySelectorAll('input').forEach(i => i.addEventListener('input', siRecalc));
+  row.querySelectorAll('input').forEach((i, idx) => {
+    i.addEventListener('input', siRecalc);
+    i.addEventListener('blur', () => maybeCollapseOnBlur(row, SI_ROWS));
+  });
   row.querySelector('.c-del').addEventListener('click', () => {
     if (SI_ROWS.children.length <= 1) { toast('至少保留一行', 'error'); return; }
     row.remove(); siRecalc();
@@ -113,7 +116,10 @@ function soAddRow() {
   bindSuggest(row, '.c-name', true); // 出库只显示有库存的
   $('.c-name', row).addEventListener('input', () => soRecalcRow(row));
   $('.c-name', row).addEventListener('change', () => soRecalcRow(row));
-  row.querySelectorAll('input').forEach(i => i.addEventListener('input', () => soRecalcRow(row)));
+  row.querySelectorAll('input').forEach(i => {
+    i.addEventListener('input', () => soRecalcRow(row));
+    i.addEventListener('blur', () => maybeCollapseOnBlur(row, SO_ROWS));
+  });
   row.querySelector('.c-del').addEventListener('click', () => {
     if (SO_ROWS.children.length <= 1) { toast('至少保留一行', 'error'); return; }
     row.remove(); soRecalc();
@@ -334,26 +340,59 @@ document.addEventListener('keydown', (e) => {
 
 // 折叠行：有商品名时才折叠；展开按钮点击恢复；支持反复折叠/展开
 function tryCollapseRow(row) {
+  if (row.classList.contains('collapsed')) return; // 已折叠跳过
   const name = $('.c-name', row).value.trim();
   if (!name) return; // 空行不折叠
-  // 清理旧状态
   row.classList.remove('collapsed');
   row.querySelectorAll('.row-summary').forEach(s => s.remove());
-  // 构建新的折叠摘要
   const qty = +$('.c-qty', row).value || 0;
   const sub = $('.c-sub', row) ? $('.c-sub', row).textContent : '';
   const summary = document.createElement('div');
   summary.className = 'row-summary';
-  summary.innerHTML = `<span class="rs-name">${escapeHtml(name)}</span><span class="rs-qty">× ${qty}</span><span class="rs-sub">${sub}</span><span class="rs-expand" title="展开此行继续编辑">展开 ▾</span>`;
-  // 点击摘要展开
+  summary.innerHTML = `<span class="rs-name">${escapeHtml(name)}</span><span class="rs-qty">× ${qty}</span><span class="rs-sub">${sub}</span><span class="rs-expand">展开 ▾</span>`;
   summary.addEventListener('click', (ev) => {
     ev.stopPropagation();
-    if (summary.classList.contains('rs-deleting')) return;
     row.classList.remove('collapsed');
     summary.remove();
   });
   row.appendChild(summary);
   row.classList.add('collapsed');
+}
+
+// blur 时自动折叠 + 手机端软键盘"完成"后自动跳行
+function maybeCollapseOnBlur(row, body) {
+  setTimeout(() => {
+    // 已经折叠或商品名为空，跳过
+    if (row.classList.contains('collapsed')) return;
+    if (!$('.c-name', row).value.trim()) return;
+    // 当前焦点是否已在 batch-body 的某个 input 上？
+    const fe = document.activeElement;
+    const feInBody = fe && body.contains(fe) && (fe.tagName === 'INPUT' || fe.tagName === 'SELECT');
+    if (feInBody) {
+      // 用户自己跳到了 batch-body 内的另一个 field（比如 Enter 跳格、或点了其他 field）
+      // 这种情况如果 fe 不在当前 row 里，就折叠当前 row
+      if (!row.contains(fe)) {
+        tryCollapseRow(row);
+      }
+      return;
+    }
+    // 焦点不在 batch-body 内（软键盘"完成"、或点了导航/空白区）
+    // → 折叠 + 自动跳到下一行第一格（如果有），否则新建一行
+    tryCollapseRow(row);
+    const nextRow = row.nextElementSibling;
+    let target = null;
+    if (nextRow) {
+      nextRow.classList.remove('collapsed');
+      nextRow.querySelectorAll('.row-summary').forEach(s => s.remove());
+      target = nextRow.querySelector('input, select');
+    } else {
+      // 新建一行
+      if (body === SI_ROWS) { siAddRow(); } else { soAddRow(); }
+      const newRow = body.lastElementChild;
+      target = newRow.querySelector('input, select');
+    }
+    if (target) { target.focus(); if (target.select) target.select(); }
+  }, 0);
 }
 
 /* ========== 初始化 ========== */
